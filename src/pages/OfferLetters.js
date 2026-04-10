@@ -62,7 +62,7 @@ const OfferLetter = () => {
     };
 
     try {
-      const res = await axios.post("/api/offer", payload);
+      const res = await axios.post("/offer", payload);
       alert("Offer Letter Generated Successfully ✅");
       window.open(res.data.pdfUrl, "_blank");
     } catch (err) {
