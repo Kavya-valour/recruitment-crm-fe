@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 const OfferLetter = () => {
   const [form, setForm] = useState({
@@ -62,7 +62,7 @@ const OfferLetter = () => {
     };
 
     try {
-      const res = await axios.post("/offer", payload);
+      const res = await api.post("/offer", payload);
       alert("Offer Letter Generated Successfully ✅");
       window.open(res.data.pdfUrl, "_blank");
     } catch (err) {
