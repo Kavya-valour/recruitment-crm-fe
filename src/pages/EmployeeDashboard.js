@@ -127,7 +127,7 @@ const EmployeeDashboard = () => {
       /* ATTENDANCE */
       if (myEmployee) {
         const today = new Date().toISOString().slice(0, 10);
-        await refreshAttendanceForDate(myEmployee.employee_id, today);
+        await refreshAttendanceForDate(user.employeeId, today);
       }
     } catch (err) {
       console.error(err);
@@ -142,7 +142,7 @@ const EmployeeDashboard = () => {
     setSubmitting(true);
 
     try {
-      const resolvedEmployeeId = employee?.employee_id || user?.employeeId;
+      const resolvedEmployeeId = user?.employeeId;
       await api.post("/leaves", {
         employeeId: resolvedEmployeeId, // ✅ FIXED
         leaveType: formData.leaveType,
@@ -317,7 +317,7 @@ const EmployeeDashboard = () => {
 
               try {
                 const payload = {
-                  employeeId: employee?.employee_id || user?.employeeId,
+                   employeeId: user?.employeeId,
                   date: attendanceState.date,
                   status: attendanceState.status,
                   inTime: attendanceState.inTime,
@@ -359,7 +359,7 @@ const EmployeeDashboard = () => {
           >
             <input
               type="text"
-              value={employee?.employee_id || user?.employeeId || ""}
+              value={user?.employeeId || ""}
               readOnly
               placeholder="Employee ID"
               className="border p-3 rounded bg-gray-50"
@@ -369,7 +369,7 @@ const EmployeeDashboard = () => {
               value={attendanceState.date}
               onChange={async (e) => {
                 const selectedDate = e.target.value;
-                const employeeId = employee?.employee_id || user?.employeeId;
+                const employeeId = user?.employeeId;
                 await refreshAttendanceForDate(employeeId, selectedDate);
               }}
               className="border p-3 rounded"

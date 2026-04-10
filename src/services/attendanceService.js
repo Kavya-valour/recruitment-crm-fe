@@ -28,14 +28,24 @@ export const uploadCsv = async (file) => {
 // ---------------- Add Manual Attendance ----------------
 export const addAttendance = async (attendanceData) => {
   try {
-    const response = await api.post("/attendance", attendanceData);
+    const token = localStorage.getItem("token"); // 🔥 GET TOKEN
+
+    const response = await api.post(
+      "/attendance",
+      attendanceData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // 🔥 SEND TOKEN
+        },
+      }
+    );
+
     return response.data;
   } catch (error) {
     console.error("Add attendance failed:", error.response?.data || error.message);
     throw error;
   }
 };
-
 // ---------------- Get Attendance Records ----------------
 export const getAttendanceRecords = async () => {
   try {
