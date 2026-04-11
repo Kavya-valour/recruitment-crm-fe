@@ -22,9 +22,9 @@ const Payroll = () => {
         {payrolls.length > 0 ? (
           payrolls.map((p) => (
             <div key={p._id} className="p-4 border rounded-lg shadow">
-              <p><strong>Employee Name:</strong> {p.employeeName}</p>
+              <p><strong>Employee Name:</strong> {p.employeeId?.name}</p>
               <p><strong>Employee ID:</strong> {p.formattedEmployeeId}</p>
-              <p><strong>Designation:</strong> {p.designation}</p>
+              <p><strong>Designation:</strong> {p.employeeId?.designation}</p>
               <p><strong>Month:</strong> {p.month} {p.year}</p>
               <p><strong>Net Salary:</strong> ₹{p.netSalary?.toLocaleString()}</p>
               <p><strong>Status:</strong> {p.status}</p>

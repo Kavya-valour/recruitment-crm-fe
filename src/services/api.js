@@ -2,10 +2,9 @@ import axios from "axios";
 
 // Support both Vite and legacy CRA env vars
 const viteUrl = typeof import.meta !== 'undefined' ? import.meta.env?.VITE_BACKEND_URL : undefined;
-const legacyUrl = typeof process !== 'undefined' ? process.env?.REACT_APP_BACKEND_URL : undefined;
 
 const api = axios.create({
-  baseURL: (viteUrl || legacyUrl || "http://localhost:5000/api").replace(/\/$/, ""),
+  baseURL: (viteUrl || "http://localhost:5000/api").replace(/\/$/, ""),
   transformResponse: [
     (data) => {
       if (data === "" || data === null || data === undefined) return data;

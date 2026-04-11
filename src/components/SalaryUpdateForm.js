@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { PayrollContext } from "../context/PayrollContext";
-
+import api from "../services/api";
 const SalarySchema = Yup.object().shape({
   employeeId: Yup.string().required("Employee selection is required"),
   month: Yup.string().required("Month is required"),
@@ -23,9 +23,8 @@ const SalaryUpdateForm = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/employees");
-        const data = await res.json();
-        setEmployees(data);
+        const res = await api.get("/employees");
+        setEmployees(res.data);
       } catch (err) {
         console.error("Error fetching employees:", err);
       }
@@ -60,15 +59,11 @@ const SalaryUpdateForm = () => {
           if (!selectedEmployee) return;
 
           try {
-            await addPayroll({
-              ...vals,
-              ctc,
-              ...salary,
-              employeeName: selectedEmployee.name,
-              designation: selectedEmployee.designation,
-              joiningDate: selectedEmployee.joiningDate,
-              workLocation: selectedEmployee.workLocation || "Remote",
-              status: "Generated",
+              await addPayroll({
+              employeeId: vals.employeeId,   // must be _id
+              month: vals.month,
+              year: Number(vals.year),
+              ctc: Number(ctc)
             });
 
             resetForm();
@@ -113,7 +108,7 @@ const SalaryUpdateForm = () => {
                 <div className="mt-3 p-3 border rounded bg-gray-50 text-sm">
                   <p><strong>Name:</strong> {selectedEmployee.name}</p>
                   <p><strong>Designation:</strong> {selectedEmployee.designation}</p>
-                  <p><strong>Joining Date:</strong> {new Date(selectedEmployee.joiningDate).toLocaleDateString()}</p>
+                  <p><strong>Joining Date:</strong> {new Date(selectedEmployee.joining_date).toLocaleDateString()}</p>
                   <p><strong>Work Location:</strong> {selectedEmployee.workLocation || "Remote"}</p>
                 </div>
               )}
@@ -156,7 +151,7 @@ const SalaryUpdateForm = () => {
                   <p><strong>Salary Slip - {values.month} {values.year}</strong></p>
                   <p><strong>Employee Name:</strong> {selectedEmployee.name}</p>
                   <p><strong>Designation:</strong> {selectedEmployee.designation}</p>
-                  <p><strong>Joining Date:</strong> {new Date(selectedEmployee.joiningDate).toLocaleDateString()}</p>
+                  <p><strong>Joining Date:</strong> {new Date(selectedEmployee.joining_date).toLocaleDateString()}</p>
                   <p><strong>Work Location:</strong> {selectedEmployee.workLocation || "Remote"}</p>
 
                   <div className="grid grid-cols-2 gap-2 mt-2">
