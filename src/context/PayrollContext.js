@@ -17,9 +17,8 @@ export const PayrollProvider = ({ children }) => {
 
   const addPayroll = async (record) => {
     try {
-      const newRec = await payrollService.addPayroll(record);
-      setPayrolls((prev) => [...prev, newRec]);
-      return newRec;
+      await payrollService.addPayroll(record);
+      await getPayrolls(); // 🔥 reload full data with populate
     } catch (err) {
       console.error(err);
       throw err;
