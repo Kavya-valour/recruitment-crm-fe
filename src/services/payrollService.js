@@ -23,14 +23,14 @@ export const addPayroll = async (record) => {
 // ✅ New function: Download payslip PDF
 export const downloadPayslip = async (payrollId) => {
   try {
-    const res = await api.get(`/payroll/${payrollId}/payslip`);
+    const response = await api.get(`/payroll/${payrollId}/payslip`, {
+      responseType: "blob",   // 🔥 MUST
+    });
 
-    // 🔥 remove "/api" from base URL dynamically
-    const baseUrl = import.meta.env.VITE_BACKEND_URL.replace("/api", "");
+    const file = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(file);
 
-    const fileUrl = `${baseUrl}${res.data.url}`;
-
-    window.open(fileUrl, "_blank");
+    window.open(url); // ✅ opens PDF
 
   } catch (err) {
     console.error("❌ Download error:", err.response?.data || err.message);
