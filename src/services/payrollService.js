@@ -25,9 +25,11 @@ export const downloadPayslip = async (payrollId) => {
   try {
     const res = await api.get(`/payroll/${payrollId}/payslip`);
 
-    const fileUrl = `${import.meta.env.VITE_BACKEND_URL}${res.data.url}`;
+    // 🔥 remove "/api" from base URL dynamically
+    const baseUrl = import.meta.env.VITE_BACKEND_URL.replace("/api", "");
 
-    // 🔥 OPEN PDF DIRECTLY
+    const fileUrl = `${baseUrl}${res.data.url}`;
+
     window.open(fileUrl, "_blank");
 
   } catch (err) {
