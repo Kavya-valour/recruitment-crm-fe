@@ -15,7 +15,7 @@ export const addPayroll = async (record) => {
     const res = await api.post("/payroll", record);
     return res.data;
   } catch (err) {
-    console.error("Error adding payroll record:", err);
+    console.error("🔥 BACKEND ERROR:", err.response?.data);
     throw err;
   }
 };
@@ -24,19 +24,21 @@ export const addPayroll = async (record) => {
 export const downloadPayslip = async (payrollId) => {
   try {
     const response = await api.get(`/payroll/${payrollId}/payslip`, {
-      responseType: "blob", // important for downloading files
+      responseType: "blob",
     });
 
-    // create a temporary link to download the file
-    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const file = new Blob([response.data], { type: "application/pdf" });
+    const fileURL = window.URL.createObjectURL(file);
+
+    // ✅ FORCE DOWNLOAD (WORKS ALWAYS)
     const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "Payslip.pdf");
+    link.href = fileURL;
+    link.download = `Payslip-${payrollId}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
   } catch (err) {
-    console.error("Error downloading payslip:", err);
-    throw err;
+    console.error("❌ Download error:", err.response?.data || err.message);
   }
 };
