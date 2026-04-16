@@ -43,6 +43,8 @@ const EmployeeDashboard = () => {
     outTime: "",
   });
 
+  const empId = employee?.employee_id || user?.employeeId;
+
   /* LOGOUT */
   const handleLogout = () => {
     logout();
@@ -127,7 +129,7 @@ const EmployeeDashboard = () => {
       /* ATTENDANCE */
       if (myEmployee) {
         const today = new Date().toISOString().slice(0, 10);
-        await refreshAttendanceForDate(user.employeeId, today);
+        await refreshAttendanceForDate(empId, today);
       }
     } catch (err) {
       console.error(err);
@@ -316,8 +318,15 @@ const EmployeeDashboard = () => {
               setAttendanceSubmitting(true);
 
               try {
+
+                if (!empId) 
+                  {
+                    alert("Employee ID missing!");
+                    return;
+                  }
+
                 const payload = {
-                   employeeId: user?.employeeId,
+                  employeeId: empId,
                   date: attendanceState.date,
                   status: attendanceState.status,
                   inTime: attendanceState.inTime,
@@ -359,7 +368,7 @@ const EmployeeDashboard = () => {
           >
             <input
               type="text"
-              value={user?.employeeId || ""}
+              value={empId || ""}
               readOnly
               placeholder="Employee ID"
               className="border p-3 rounded bg-gray-50"
@@ -369,7 +378,7 @@ const EmployeeDashboard = () => {
               value={attendanceState.date}
               onChange={async (e) => {
                 const selectedDate = e.target.value;
-                const employeeId = user?.employeeId;
+                const employeeId = empId;
                 await refreshAttendanceForDate(employeeId, selectedDate);
               }}
               className="border p-3 rounded"
